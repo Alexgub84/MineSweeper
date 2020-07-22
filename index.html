@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Mines Sweeper</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body onload="init()">
+    <h1 class="title">Mine Sweeper</h1>
+    <div class="control">
+        <span class="count">00</span>
+        <button class="reset" onclick="resetGame(this)">😎</button>
+        <span class="timer">000</span>
+
+    </div>
+    <div>
+        <table>
+            <tbody class="board" oncontextmenu="return false"></tbody>
+        </table>
+    </div>
+
+    <h4 class="footer">Alex Guberman</h4>
+
+    <script src="js/utilities.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/game.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,109 @@
+.title {
+    text-align: center;
+    background-color: blue;
+}
+
+.footer {
+    text-align: center;
+    background-color: gray;
+}
+
+img {
+    position: relative;
+    width: 85%;
+    height: 85%;
+}
+
+table {
+    margin: auto;
+    border: 3px solid rgb(5, 48, 77);
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.cell {
+    background-color: #BBB9B9;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+td {
+    border: 1px solid grey;
+    table-layout: fixed;
+}
+
+.control {
+    position: relative;
+    margin: auto;
+    width: 50%;
+    background-color: rgb(197, 192, 192);
+    height: 30px;
+    margin-bottom: 3px;
+    border: black solid;
+    color: red;
+    /* font-stretch: extra-expanded; */
+    font-weight: bold;
+}
+
+.timer {
+    position: absolute;
+    font-size: 20px;
+    right: 5px;
+    top: 3px;
+}
+
+.count {
+    position: absolute;
+    font-size: 20px;
+    left: 5px;
+    top: 3px;
+}
+
+.reset {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin-top: 1px;
+}
+
+.hidden {
+    background-color: #D5D4D4;
+}
+
+.cell-1 {
+    color: rgb(26, 109, 218);
+}
+
+.cell-2 {
+    color: rgb(14, 143, 14);
+}
+
+.cell-3 {
+    color: red;
+}
+
+.cell-4 {
+    color: purple;
+}
+
+.cell-5 {
+    color: maroon;
+}
+
+.cell-6 {
+    color: turquoise;
+}
+
+.cell-7 {
+    color: black;
+}
+
+.cell-8 {
+    color: gray;
+}
