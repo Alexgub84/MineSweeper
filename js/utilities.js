@@ -3,9 +3,9 @@
 function setTimer() {
     var elTimer = document.querySelector('.timer');
     var timeNow = new Date;
-    var seconds = Math.floor((timeNow.getTime() - gTimeGameBegan.getTime()) / 1000);
-    if (seconds < 100) seconds = (seconds < 10) ? '00' + seconds : '0' + seconds;
-    elTimer.innerText = seconds;
+    gGame.secsPassed = Math.floor((timeNow.getTime() - gTimeGameBegan.getTime()) / 1000);
+    if (gGame.secsPassed < 100) gGame.secsPassed = (gGame.secsPassed < 10) ? '00' + gGame.secsPassed : '0' + gGame.secsPassed;
+    elTimer.innerText = gGame.secsPassed;
 }
 
 
