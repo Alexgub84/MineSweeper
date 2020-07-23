@@ -9,6 +9,20 @@ function setTimer() {
 }
 
 
-function getIntNotInc(min = 0, max = 10) {
+function getIntNotInc(min = 0, max = gLevel.SIZE) {
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+function copyMat(sourceMat) {
+    var newMat = [];
+    for (var i = 0; i < sourceMat.length; i++) {
+        var arr = []
+        for (let j = 0; j < sourceMat[i].length; j++) {
+            var sourceObj = sourceMat[i][j];
+            var obj = Object.assign({}, sourceObj)
+            arr.push(obj);
+        }
+        newMat.push(arr);
+    }
+    return newMat;
 }
