@@ -56,7 +56,7 @@ function resetControlOptions() {
 }
 
 function setLevel(elButton) {
-
+    _cancelManualMinesStatus();
     switch (elButton.innerText) {
         case 'Beginner':
             gLevel.MINES = 2;
@@ -76,13 +76,19 @@ function setLevel(elButton) {
     init();
 }
 
-// function setManualMines() {
-//     init()
-//     resetControlOptions();
-//     var minesCounter = 0;
-//     gIsSettingMines = true;
-
-// }
+function setManualMines() {
+    init()
+    resetControlOptions();
+    for (let i = 0; i < gBoard.length; i++) {
+        for (let j = 0; j < gBoard[0].length; j++) {
+            document.querySelector(`#cell-${i}-${j}`).classList.add('minesmanual');
+        }
+    }
+    document.querySelector('table').style.cursor = 'cell';
+    document.querySelector('.count').innerText = gLevel.MINES - gManualMines.length;
+    document.querySelector('.count').style.color = 'rgb(212, 154, 27)';
+    gIsSettingMines = true;
+}
 
 function showHint(elButton) {
     //to do show 3 hints and change the symbole
@@ -92,7 +98,7 @@ function showHint(elButton) {
     var elSpan = document.querySelector(`.hint${3-gSpecial.hints}`);
     gSpecial.hints--;
     elSpan.style.visibility = 'hidden';
-
+    saveNextMove();
     gTempBoard = copyMat(gBoard);
 
     for (let i = 0; i < gBoard.length; i++) {
@@ -105,7 +111,7 @@ function showHint(elButton) {
     if (gSpecial.hints === 0) {
         document.querySelector('.hintButton').disabled = true;
     }
-    saveNextMove();
+
 }
 
 function useLife() {
@@ -147,9 +153,10 @@ function safeMove(elButton) {
 }
 
 function undoMove(elButton) {
-    console.log('undoing');
+
     //data
     var len = gAllmoves.board.length;
+    gBoard = [];
     gBoard = copyMat(gAllmoves.board[(len - 1)]);
     gGame = Object.assign({}, gAllmoves.game[(len - 1)]);
     gSpecial = Object.assign({}, gAllmoves.special[(len - 1)]);
@@ -157,17 +164,28 @@ function undoMove(elButton) {
     gAllmoves.game.pop();
     gAllmoves.special.pop();
     renderBoard();
+
+
     if (gAllmoves.board.length === 0) {
         document.querySelector('.undoButton').disabled = true;
     }
     //control and help panel
     //mines count
     var updatedCount = (gLevel.MINES - gGame.markedCount);
-    console.log(updatedCount);
     updatedCount = (updatedCount < 10) ? ('0' + updatedCount) : updatedCount;
     document.querySelector('.count').innerText = updatedCount;
-    //Emojy
-    document.querySelector('.reset').innerText = RESET;
+    //Emojy and timer
+    var elReset = document.querySelector('.reset');
+    if (elReset.innerText === LOST) {
+        document.querySelector('.reset').innerText = RESET;
+        var elTimer = document.querySelector('.timer');
+        var secStr = '';
+        //timer isn"t working
+        if (gGame.secsPassed < 100) secStr = (gGame.secsPassed < 10) ? '00' + gGame.secsPassed : '0' + gGame.secsPassed;
+        elTimer.innerText = secStr;
+        gTimer = setInterval(setTimer, 1000);
+
+    }
     //hints
     for (let i = 0; i < gSpecial.hints; i++) {
         document.querySelector(`.hint${i}`).style.visibility = 'visible';
@@ -180,8 +198,11 @@ function undoMove(elButton) {
         document.querySelector(`.life${i}`).style.visibility = 'visible';
     }
     if (gSpecial.lifes > 0) {
-        document.getElementById('life').disabled = false;
+        var elCheckBox = document.querySelector(`#life`);
+        elCheckBox.disabled = false;
+        gSpecial.isLifesOn = elCheckBox.checked;
     }
+
     //safe moves
     for (let i = 0; i < gSpecial.safeClicks; i++) {
         document.querySelector(`.safe${i}`).style.visibility = 'visible';
@@ -207,7 +228,6 @@ function getSafeMoveCoords() {
 }
 
 function saveNextMove() {
-
     var elButton = document.querySelector('.undoButton');
     if (elButton.disabled) {
         elButton.disabled = false;
@@ -217,4 +237,40 @@ function saveNextMove() {
     gAllmoves.game.push(Object.assign({}, gGame));
     gAllmoves.special.push(Object.assign({}, gSpecial));
 
+}
+
+function setManualMine(elCell) {
+    if (!gIsSettingMines) return;
+    var coords = { i: +elCell.dataset.i, j: +elCell.dataset.j };
+    var newMine = { i: coords.i, j: coords.j };
+    for (let i = 0; i < gManualMines.length; i++) {
+        if (gManualMines[i].i === newMine.i && gManualMines[i].j === newMine.j) return;
+    }
+    elCell.classList.remove('minesmanual');
+    elCell.classList.add('mine');
+    elCell.innerHTML += MINE_IMG;
+    gManualMines.push(newMine);
+    document.querySelector('.count').innerText = gLevel.MINES - gManualMines.length;
+    if ((gManualMines.length) === gLevel.MINES) {
+        buildBoard(gManualMines);
+        renderBoard();
+        _cancelManualMinesStatus();
+        gGame.isOn = true;
+        gTimeGameBegan = new Date;
+        gTimer = setInterval(setTimer, 1000);
+        saveNextMove();
+
+    }
+}
+
+function _cancelManualMinesStatus() {
+    //set after rendering
+    gManualMines = [];
+    gIsSettingMines = false;
+    document.querySelector('.count').style.color = 'red';
+
+    var updatedCount = gLevel.MINES;
+    updatedCount = (updatedCount < 10) ? ('0' + updatedCount) : updatedCount;
+    document.querySelector('.count').innerText = updatedCount;
+    document.querySelector('table').style.cursor = 'auto';
 }

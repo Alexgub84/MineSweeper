@@ -2,6 +2,7 @@
 
 
 function renderBoard() {
+    console.log(gBoard);
     var strHtml = '';
     for (var i = 0; i < gBoard.length; i++) {
         var row = gBoard[i];
@@ -14,7 +15,6 @@ function renderBoard() {
     var elBoard = document.querySelector('.board');
     elBoard.innerHTML = strHtml;
 }
-
 
 function getNewHtmlForCell(coord) {
     var cell = gBoard[coord.i][coord.j];
@@ -37,8 +37,8 @@ function getNewHtmlForCell(coord) {
         if (cell.isMarked) cellText = FLAG_IMG;
         if (cell.isHinted) cellSpecialClassName += ' hinted';
     }
-    //onmousedown ="mouseDown(this)
-    var functions = 'onclick="cellClicked(this)" oncontextmenu = "rightClicked(this)"'
+    var functions = 'onclick="cellClicked(this); setManualMine(this)" oncontextmenu = "rightClicked(this)" '
+        //functions += ' onmousedown ="mouseDown(this)'
     strHtml += `<td id="cell-${coord.i}-${coord.j}" class="cell cell-${cell.minesAroundCount} ${cellSpecialClassName}" ${functions} data-i="${coord.i}" data-j="${coord.j}">
 ${cellText}</td>`;
 
@@ -46,7 +46,7 @@ ${cellText}</td>`;
 }
 
 function buildBoard(mines) {
-    buileEmptyBoard();
+    buildEmptyBoard();
 
     for (let count = 0; count < mines.length; count++) {
         var mineI = mines[count].i;
@@ -54,10 +54,9 @@ function buildBoard(mines) {
         gBoard[mineI][mineJ].isMine = true;
         setMineNegsCount({ i: mineI, j: mineJ });
     }
-    console.log(gBoard);
 }
 
-function buileEmptyBoard() {
+function buildEmptyBoard() {
     gBoard = [];
     for (var i = 0; i < gLevel.SIZE; i++) {
         gBoard[i] = [];
@@ -87,7 +86,6 @@ function creatRandomMines(notMineCoord) {
         newMine.j = getIntNotInc(0, gLevel.SIZE);
         if ((notMineCoord.i !== newMine.i && notMineCoord.j !== newMine.j) && (checkIfMineLegit(mines, newMine))) {
             mines.push(newMine);
-            console.log(`${newMine.i }-${newMine.j}`);
         }
     }
 
